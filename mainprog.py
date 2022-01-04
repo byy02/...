@@ -6,7 +6,7 @@ from pygame import mixer
 
 root = tk.Tk()
 root.title("Casette MP3 Çalar")
-root.iconbitmap('')
+root.iconbitmap('play button icon.png')
 root.geometry("640x480")
 root.config(bg = "black")
 
