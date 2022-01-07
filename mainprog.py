@@ -1,8 +1,11 @@
 import tkinter as tk
 import fnmatch
 import os
+from tkinter.constants import ACTIVE, END
 from pygame import mixer
 from tkinter import filedialog
+
+import pygame
 
 
 root = tk.Tk()
@@ -11,13 +14,30 @@ root.iconbitmap('casettev2.ico')
 root.geometry("640x480")
 root.config(bg = "gray")
 
-mixer.init()
+pygame.mixer.init()
 
-def sarkı_ekle():
-    sarkı = filedialog.askopenfilename(initialdir='audio/',  )
+def sarki_ekle():
+    sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
+    sarki = sarki.replace("C:/Users/baris/Desktop/", "")
+    sarki = sarki.replace(".mp3", "")
+    
+    liste.insert(END, sarki)
 
 
-liste = tk.Listbox(root, bg="black" , fg="white" ,height= 20, width=160)
+def play():
+    sarki = liste.get(ACTIVE)
+    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+
+    pygame.mixer.music.load(sarki)
+    pygame.mixer.music.play(loops=0)
+
+    
+ 
+
+
+    
+
+liste = tk.Listbox(root, bg="black" , fg="white" ,height= 20, width=160, selectbackground="gray", selectforeground="white")
 liste.pack(pady=20)
 
 geri_t = tk.PhotoImage(file= 'reverse 50x50.png')
@@ -30,7 +50,7 @@ kontrl_pan.pack()
 
 geri = tk.Button(kontrl_pan, bg="gray", image=geri_t, borderwidth= 0, width= 50, height= 50,)
 ileri = tk.Button(kontrl_pan, image=ileri_t, bg= "gray", borderwidth= 0, width= 50, height= 50)
-oynat = tk.Button(kontrl_pan, image=oynat_t, bg="gray", borderwidth= 0, width= 50, height= 50)
+oynat = tk.Button(kontrl_pan, image=oynat_t, bg="gray", borderwidth= 0, width= 50, height= 50, command= play)
 durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50)
 
 
@@ -38,5 +58,15 @@ geri.grid(row=0, column=0, padx=10)
 ileri.grid(row=0, column=3, padx=10)
 oynat.grid(row=0, column=1, padx=10)
 durdur.grid(row=0, column=2, padx=10)
+
+my_menu = tk.Menu(root)
+root.config(menu=my_menu)
+
+add_song_menu = tk.Menu(my_menu)
+my_menu.add_cascade(label="Şarkı ekle", menu=add_song_menu)
+add_song_menu.add_command(label="Bir şarkı ekle", command=sarki_ekle)
+
+
+
 
 root.mainloop()
