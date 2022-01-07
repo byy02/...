@@ -6,6 +6,7 @@ from pygame import mixer
 from tkinter import filedialog
 
 import pygame
+from pygame.music import pause
 
 
 root = tk.Tk()
@@ -24,6 +25,17 @@ def sarki_ekle():
     liste.insert(END, sarki)
 
 
+    def sarkilar_birçok_ekle():
+    sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
+
+
+    for sarki in sarkilar:
+        sarki = sarki.replace("C:/Users/baris/Desktop/", "")
+        sarki = sarki.replace(".mp3", "")
+
+        liste.insert(END, sarki)
+
+
 def play():
     sarki = liste.get(ACTIVE)
     sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
@@ -31,11 +43,29 @@ def play():
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
 
-    
- 
+def stop():
+    pygame.mixer.music.stop()
+    liste.selection_clear(ACTIVE)
 
 
-    
+global paused
+paused = False
+
+
+def pause(is_paused):
+    global paused
+    paused = is_paused
+
+    if paused:
+
+         pygame.mixer.music.unpause()
+         pasused = False
+    else:
+
+    pygame.mixer.music.pause()    
+    paused = True
+     
+
 
 liste = tk.Listbox(root, bg="black" , fg="white" ,height= 20, width=160, selectbackground="gray", selectforeground="white")
 liste.pack(pady=20)
@@ -51,8 +81,8 @@ kontrl_pan.pack()
 geri = tk.Button(kontrl_pan, bg="gray", image=geri_t, borderwidth= 0, width= 50, height= 50,)
 ileri = tk.Button(kontrl_pan, image=ileri_t, bg= "gray", borderwidth= 0, width= 50, height= 50)
 oynat = tk.Button(kontrl_pan, image=oynat_t, bg="gray", borderwidth= 0, width= 50, height= 50, command= play)
-durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50)
-
+durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50, command=lambda:pause(paused) 
+ 
 
 geri.grid(row=0, column=0, padx=10)
 ileri.grid(row=0, column=3, padx=10)
@@ -66,7 +96,7 @@ add_song_menu = tk.Menu(my_menu)
 my_menu.add_cascade(label="Şarkı ekle", menu=add_song_menu)
 add_song_menu.add_command(label="Bir şarkı ekle", command=sarki_ekle)
 
+add_song_menu.add command(label="Birçok şarkılar ekle", command=sarkilar_birçok_ekle)
 
 
-
-root.mainloop()
+root.mainloop()  
