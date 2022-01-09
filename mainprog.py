@@ -27,17 +27,7 @@ def sarki_ekle():
     
     liste.insert(END, sarki)
 
-global paused
-paused = False
 
-def pause(is_paused):
-   global paused
-   paused = is_paused
-
-   if paused:
-    pygame.mixer.music.pause
-    
-    pygame.mixer.music.unpause
 
 
 def play():
@@ -64,7 +54,7 @@ kontrl_pan.pack()
 geri = tk.Button(kontrl_pan, bg="gray", image=geri_t, borderwidth= 0, width= 50, height= 50,)
 ileri = tk.Button(kontrl_pan, image=ileri_t, bg= "gray", borderwidth= 0, width= 50, height= 50)
 oynat = tk.Button(kontrl_pan, image=oynat_t, bg="gray", borderwidth= 0, width= 50, height= 50, command= play)
-durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50, command=lambda: pause(paused) ) 
+durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50) 
  
 
 geri.grid(row=0, column=0, padx=10)
