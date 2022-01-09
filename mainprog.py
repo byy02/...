@@ -27,6 +27,18 @@ def sarki_ekle():
     
     liste.insert(END, sarki)
 
+global paused
+paused = False
+
+def pause(is_paused):
+   global paused
+   paused = is_paused
+
+   if paused:
+    pygame.mixer.music.pause
+    
+    pygame.mixer.music.unpause
+
 
 def play():
     sarki = liste.get(ACTIVE)
@@ -35,21 +47,6 @@ def play():
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
 
-global paused
-
-
-def pause(is_paused):
-    
-    paused = is_paused
-
-    if paused:
-
-         pygame.mixer.music.unpause()
-         paused = False
-    else:
-
-     pygame.mixer.music.pause()    
-    paused = True
      
 
 
@@ -67,7 +64,7 @@ kontrl_pan.pack()
 geri = tk.Button(kontrl_pan, bg="gray", image=geri_t, borderwidth= 0, width= 50, height= 50,)
 ileri = tk.Button(kontrl_pan, image=ileri_t, bg= "gray", borderwidth= 0, width= 50, height= 50)
 oynat = tk.Button(kontrl_pan, image=oynat_t, bg="gray", borderwidth= 0, width= 50, height= 50, command= play)
-durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50, command=lambda:pause(paused)) 
+durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50, command=lambda: pause(paused) ) 
  
 
 geri.grid(row=0, column=0, padx=10)
@@ -82,7 +79,6 @@ add_song_menu = tk.Menu(my_menu)
 my_menu.add_cascade(label="Şarkı ekle", menu=add_song_menu)
 add_song_menu.add_command(label="Bir şarkı ekle", command=sarki_ekle)
 
-add_song_menu.add_command(label="Birden fazla şarkı ekle", command=sarkilar_birçok_ekle)
 
 
 root.mainloop()  
