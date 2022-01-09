@@ -1,9 +1,10 @@
 import tkinter as tk
 import fnmatch
 import os
-from tkinter.constants import ACTIVE, END
+from tkinter.constants import ACTIVE, ANCHOR, END
 from pygame import mixer
 from tkinter import filedialog
+
 
 import pygame
 
@@ -17,8 +18,7 @@ root.config(bg = "gray")
 
 pygame.mixer.init()
 
-def sarkilar_birçok_ekle():
-     sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
+
 
 def sarki_ekle():
     sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
@@ -26,6 +26,24 @@ def sarki_ekle():
     sarki = sarki.replace(".mp3", "")
     
     liste.insert(END, sarki)
+    
+
+
+
+global paused
+paused = False
+
+def pause(is_paused):
+    global paused 
+    paused = is_paused
+
+    if paused:
+        pygame.mixer.music.unpause()
+        paused = False
+    else:
+        pygame.mixer.music.pause()
+        paused = True    
+
 
 
 
@@ -37,7 +55,46 @@ def play():
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
 
-     
+
+def sonraki_sarki():
+    sonraki = liste.curselection()
+    sonraki = sonraki[0]+1
+    sarki = liste.get(sonraki)
+    print(sarki)
+    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+
+    pygame.mixer.music.load(sarki)
+    pygame.mixer.music.play(loops=0)
+
+    liste.selection_clear(0, END)
+    liste.activate(sonraki)
+    liste.selection_set(sonraki, last=None)
+
+
+def önceki_sarki():
+    önceki = liste.curselection()
+    önceki = önceki[0]-1
+    sarki = liste.get(önceki)
+    print(sarki)
+    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+
+    pygame.mixer.music.load(sarki)
+    pygame.mixer.music.play(loops=0)
+
+    liste.selection_clear(0, END)
+    liste.activate(önceki)
+    liste.selection_set(önceki, last=None)
+
+
+def sarki_sil(): 
+    liste.delete(ANCHOR)
+    pygame.mixer.music.stop()
+
+
+def liste_temizle():
+    liste.delete(0, END)
+    pygame.mixer.music.stop()   
+
 
 
 liste = tk.Listbox(root, bg="black" , fg="white" ,height= 20, width=160, selectbackground="gray", selectforeground="white")
@@ -51,10 +108,10 @@ durdur_t = tk.PhotoImage(file= 'pause 50x50 remake.png')
 kontrl_pan = tk.Frame(root, bg="gray")
 kontrl_pan.pack()
 
-geri = tk.Button(kontrl_pan, bg="gray", image=geri_t, borderwidth= 0, width= 50, height= 50,)
-ileri = tk.Button(kontrl_pan, image=ileri_t, bg= "gray", borderwidth= 0, width= 50, height= 50)
+geri = tk.Button(kontrl_pan, bg="gray", image=geri_t, borderwidth= 0, width= 50, height= 50, command = önceki_sarki)
+ileri = tk.Button(kontrl_pan, image=ileri_t, bg= "gray", borderwidth= 0, width= 50, height= 50, command = sonraki_sarki)
 oynat = tk.Button(kontrl_pan, image=oynat_t, bg="gray", borderwidth= 0, width= 50, height= 50, command= play)
-durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50) 
+durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50, command=lambda: pause(paused)) 
  
 
 geri.grid(row=0, column=0, padx=10)
@@ -69,6 +126,10 @@ add_song_menu = tk.Menu(my_menu)
 my_menu.add_cascade(label="Şarkı ekle", menu=add_song_menu)
 add_song_menu.add_command(label="Bir şarkı ekle", command=sarki_ekle)
 
+delete_s_menu = tk.Menu(my_menu)
+my_menu.add_cascade(label="Şarkı çıkar", menu=delete_s_menu)
+delete_s_menu.add_command(label="Oynatma listesinden bir şarkı çıkar", command=sarki_sil)
+delete_s_menu.add_command(label="Oynatma listesini temizle", command=liste_temizle)
 
 
 root.mainloop()  
