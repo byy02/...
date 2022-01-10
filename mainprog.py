@@ -1,12 +1,12 @@
 import tkinter as tk
 import fnmatch
 import os
-from tkinter.constants import ACTIVE, END
+from tkinter.constants import  ACTIVE, ANCHOR, END
 from pygame import mixer
 from tkinter import filedialog
 
 import pygame
-
+from pygame.music import pause
 
 
 root = tk.Tk()
@@ -28,6 +28,14 @@ def sarki_ekle():
     liste.insert(END, sarki)
 
 
+   
+
+
+    for sarki in sarkilar:
+        sarki = sarki.replace("C:/Users/baris/Desktop/", "")
+        sarki = sarki.replace(".mp3", "")
+
+        liste.insert(END, sarki)
 
 
 def play():
@@ -37,6 +45,27 @@ def play():
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
 
+def stop():
+    pygame.mixer.music.stop()
+    liste.selection_clear(ACTIVE)
+
+
+global paused
+paused = False
+
+
+def pause(is_paused):
+    global paused
+    paused = is_paused
+
+    if paused:
+
+         pygame.mixer.music.unpause()
+         pasused = False
+    else:
+
+    pygame.mixer.music.pause()    
+    paused = True
      
 
 
@@ -54,8 +83,8 @@ kontrl_pan.pack()
 geri = tk.Button(kontrl_pan, bg="gray", image=geri_t, borderwidth= 0, width= 50, height= 50,)
 ileri = tk.Button(kontrl_pan, image=ileri_t, bg= "gray", borderwidth= 0, width= 50, height= 50)
 oynat = tk.Button(kontrl_pan, image=oynat_t, bg="gray", borderwidth= 0, width= 50, height= 50, command= play)
-durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50) 
- 
+durdur = tk.Button(kontrl_pan, image=durdur_t, bg="gray", borderwidth= 0, width= 50, height= 50)
+
 
 geri.grid(row=0, column=0, padx=10)
 ileri.grid(row=0, column=3, padx=10)
@@ -69,6 +98,7 @@ add_song_menu = tk.Menu(my_menu)
 my_menu.add_cascade(label="Şarkı ekle", menu=add_song_menu)
 add_song_menu.add_command(label="Bir şarkı ekle", command=sarki_ekle)
 
+add_song_menu.add command(label="Birçok şarkılar ekle", command=sarkilar_birçok_ekle)
 
 
 root.mainloop()  
