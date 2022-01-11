@@ -1,9 +1,12 @@
 import tkinter as tk
 import fnmatch
 import os
-from tkinter.constants import  ACTIVE, ANCHOR, END
+from tkinter.constants import  ACTIVE, ANCHOR, BOTTOM, E, END, GROOVE, HORIZONTAL, W, X
 from pygame import mixer
-from tkinter import filedialog
+from tkinter import Label, filedialog
+import time
+from mutagen.mp3 import MP3
+import tkinter.ttk as ttk
 
 import pygame
 
@@ -16,6 +19,30 @@ root.geometry("640x480")
 root.config(bg = "gray")
 
 pygame.mixer.init()
+
+
+def oynatma_süresi():
+
+    anlik_sarki= liste.curselection()
+    sarki = liste.get(anlik_sarki)
+    
+
+    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    song_mut = MP3(sarki)
+
+    global sarki_uzunlugu
+    sarki_uzunlugu = song_mut.info.length
+    don_uzunlugu = time.strftime('%H:%M:%S', time.gmtime(sarki_uzunlugu))
+
+    anlik_süre = pygame.mixer.music.get_pos() / 1000
+    status_bar.config(text=anlik_süre)
+    sarki_süresi = time.strftime('%H:%M:%S', time.gmtime(anlik_süre))
+    status_bar.config(text=f'{sarki_süresi} / {don_uzunlugu} ')
+    status_bar.after(1000, oynatma_süresi)
+    print(sarki)
+       
+
+  
 
 
 def sarki_ekle():
@@ -50,6 +77,8 @@ def play():
 
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
+
+    oynatma_süresi()
 
 def sonraki_sarki():
     sonraki= liste.curselection()
@@ -90,6 +119,12 @@ def liste_temizle():
     pygame.mixer.music.stop()
 
 
+def slide():
+    pass
+
+def slide(x):
+    slider_label.config(text=f'{int(slider.get())} of {int(sarki_uzunlugu)}')
+
 
 liste = tk.Listbox(root, bg="black" , fg="white" ,height= 20, width=160, selectbackground="gray", selectforeground="white")
 liste.pack(pady=20)
@@ -124,5 +159,14 @@ delete_s_menu = tk.Menu(my_menu)
 my_menu.add_cascade(label="Şarkı çıkar", menu=delete_s_menu)
 delete_s_menu.add_command(label="Oynatma listesinden bir şarkı çıkar", command=sarki_sil)
 delete_s_menu.add_command(label="Oynatma listesini temizle", command=liste_temizle)
+
+status_bar = Label(root, text='', bd=0,bg="gray",fg="white", relief=GROOVE, anchor=W)
+status_bar.pack(fill=X, side=BOTTOM, ipady=2)
+
+slider = ttk.Scale(root, from_=0, to_=100, orient=HORIZONTAL, value=0, command= slide, length=400,)
+slider.pack(pady=5)
+
+slider_label = Label(root, text="0")
+slider_label.pack(pady=10)
 
 root.mainloop()  
