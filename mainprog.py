@@ -32,14 +32,32 @@ def oynatma_süresi():
 
     global sarki_uzunlugu
     sarki_uzunlugu = song_mut.info.length
+
     don_uzunlugu = time.strftime('%H:%M:%S', time.gmtime(sarki_uzunlugu))
 
     anlik_süre = pygame.mixer.music.get_pos() / 1000
     status_bar.config(text=anlik_süre)
     sarki_süresi = time.strftime('%H:%M:%S', time.gmtime(anlik_süre))
-    status_bar.config(text=f'{sarki_süresi} / {don_uzunlugu} ')
+    anlik_süre +=1
+    
+    if int(slider.get()) == int(sarki_uzunlugu):
+        status_bar.config(text=f'{don_uzunlugu} / {don_uzunlugu} ')
+    elif int(slider.get()) == int(anlik_süre):
+        slider_position = int(sarki_uzunlugu)
+        slider.config(to= slider_position, value = int(anlik_süre))
+    
+    else:
+        slider_position = int(sarki_uzunlugu)
+        slider.config(to= slider_position, value = int(slider.get()))
+        status_bar.config(text=f'{sarki_süresi} / {don_uzunlugu} ')
+        sarki_süresi = time.strftime('%H:%M:%S', time.gmtime(int(slider.get())))
+        sonraki_süre = int(slider.get()) + 1
+        slider.config(value = sonraki_süre) 
+    #status_bar.config(text=f'{sarki_süresi} / {don_uzunlugu} ')
+    #slider.config(value = int(anlik_süre))
+    
     status_bar.after(1000, oynatma_süresi)
-    print(sarki)
+    
        
 
   
@@ -79,6 +97,8 @@ def play():
     pygame.mixer.music.play(loops=0)
 
     oynatma_süresi()
+    #slider_position = int(sarki_uzunlugu)
+    #slider.config(to= slider_position, value = 0)
 
 def sonraki_sarki():
     sonraki= liste.curselection()
@@ -119,12 +139,16 @@ def liste_temizle():
     pygame.mixer.music.stop()
 
 
-def slide():
-    pass
 
-def slide(x):
-    slider_label.config(text=f'{int(slider.get())} of {int(sarki_uzunlugu)}')
 
+def slide(X):
+    
+    #slider_label.config(text=f'{int(slider.get())} / {int(sarki_uzunlugu)}')
+    sarki = liste.get(ACTIVE)
+    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+
+    pygame.mixer.music.load(sarki)
+    pygame.mixer.music.play(loops=0, start=int(slider.get()))
 
 liste = tk.Listbox(root, bg="black" , fg="white" ,height= 20, width=160, selectbackground="gray", selectforeground="white")
 liste.pack(pady=20)
@@ -163,7 +187,7 @@ delete_s_menu.add_command(label="Oynatma listesini temizle", command=liste_temiz
 status_bar = Label(root, text='', bd=0,bg="gray",fg="white", relief=GROOVE, anchor=W)
 status_bar.pack(fill=X, side=BOTTOM, ipady=2)
 
-slider = ttk.Scale(root, from_=0, to_=100, orient=HORIZONTAL, value=0, command= slide, length=400,)
+slider = ttk.Scale(root, from_=0, to=100, orient=HORIZONTAL, value=0, command= slide, length=400)
 slider.pack(pady=5)
 
 slider_label = Label(root, text="0")
