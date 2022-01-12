@@ -22,6 +22,8 @@ pygame.mixer.init()
 
 
 def oynatma_süresi():
+    if stopped:
+        return
 
     anlik_sarki= liste.curselection()
     sarki = liste.get(anlik_sarki)
@@ -42,6 +44,12 @@ def oynatma_süresi():
     
     if int(slider.get()) == int(sarki_uzunlugu):
         status_bar.config(text=f'{don_uzunlugu} / {don_uzunlugu} ')
+    
+    elif paused:
+        pass
+
+
+    
     elif int(slider.get()) == int(anlik_süre):
         slider_position = int(sarki_uzunlugu)
         slider.config(to= slider_position, value = int(anlik_süre))
@@ -90,6 +98,8 @@ def pause(is_paused):
 
 
 def play():
+    global stopped
+    stopped = False
     sarki = liste.get(ACTIVE)
     sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
 
@@ -101,6 +111,8 @@ def play():
     #slider.config(to= slider_position, value = 0)
 
 def sonraki_sarki():
+    status_bar.config(text='')
+    slider.config(value=0)
     sonraki= liste.curselection()
     sonraki= sonraki[0]+1
     sarki = liste.get(sonraki)
@@ -116,6 +128,8 @@ def sonraki_sarki():
 
 
 def önceki_sarki():
+    status_bar.config(text='')
+    slider.config(value=0)
     önceki = liste.curselection()
     önceki=önceki[0]-1
     sarki = liste.get(önceki)
@@ -130,15 +144,30 @@ def önceki_sarki():
     liste.selection_set(önceki, last=None)
 
 def sarki_sil():
+    stop()
     liste.delete(ANCHOR)
     pygame.mixer.music.stop()
 
 
 def liste_temizle():
+    stop()
     liste.delete(0, END)
     pygame.mixer.music.stop()
 
 
+global stopped
+stopped = False
+def stop():
+
+    status_bar.config(text='')
+    slider.config(value=0)
+
+    pygame.mixer.music.stop()
+    liste.selection_clear(ACTIVE)
+    status_bar.config(text='')
+
+    global stopped
+    stopped = True
 
 
 def slide(X):
@@ -190,7 +219,7 @@ status_bar.pack(fill=X, side=BOTTOM, ipady=2)
 slider = ttk.Scale(root, from_=0, to=100, orient=HORIZONTAL, value=0, command= slide, length=400)
 slider.pack(pady=5)
 
-slider_label = Label(root, text="0")
-slider_label.pack(pady=10)
+#slider_label = Label(root, text="0")
+#slider_label.pack(pady=10)
 
 root.mainloop()  
