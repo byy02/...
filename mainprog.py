@@ -15,7 +15,7 @@ import pygame
 root = tk.Tk()
 root.title("Casette MP3 Çalar")
 root.iconbitmap('casettev2.ico')
-root.geometry("640x480")
+root.geometry("640x540")
 root.config(bg = "gray")
 
 pygame.mixer.init()
@@ -73,6 +73,7 @@ def oynatma_süresi():
 
 def sarki_ekle():
     sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
+    
     sarki = sarki.replace("C:/Users/baris/Desktop/", "")
     sarki = sarki.replace(".mp3", "")
     
@@ -182,6 +183,9 @@ def slide(X):
 liste = tk.Listbox(root, bg="black" , fg="white" ,height= 20, width=160, selectbackground="gray", selectforeground="white")
 liste.pack(pady=20)
 
+def ses(X):
+    pygame.mixer.music.set_volume(ses_slider.get())
+
 geri_t = tk.PhotoImage(file= 'reverse 50x50.png')
 ileri_t = tk.PhotoImage(file= 'forward 50x50.png')
 oynat_t = tk.PhotoImage(file= 'play button 50x50.png')
@@ -216,8 +220,11 @@ delete_s_menu.add_command(label="Oynatma listesini temizle", command=liste_temiz
 status_bar = Label(root, text='', bd=0,bg="gray",fg="white", relief=GROOVE, anchor=W)
 status_bar.pack(fill=X, side=BOTTOM, ipady=2)
 
-slider = ttk.Scale(root, from_=0, to=100, orient=HORIZONTAL, value=0, command= slide, length=400)
+slider = ttk.Scale(root, from_=0, to=100, orient=HORIZONTAL, value=0, command= slide, length=600)
 slider.pack(pady=5)
+
+ses_slider = ttk.Scale(root, from_=0, to=1, orient=HORIZONTAL, value=1, command= ses, length=100)
+ses_slider.pack(pady=10)
 
 #slider_label = Label(root, text="0")
 #slider_label.pack(pady=10)
