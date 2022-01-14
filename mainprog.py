@@ -3,11 +3,11 @@ import fnmatch
 import os
 from tkinter.constants import  ACTIVE, ANCHOR, BOTTOM, E, END, GROOVE, HORIZONTAL, W, X
 from pygame import mixer
-from tkinter import Label, filedialog
+from tkinter import Y, Label, filedialog
 import time
 from mutagen.mp3 import MP3
 import tkinter.ttk as ttk
-
+import re
 import pygame
 
 
@@ -29,7 +29,7 @@ def oynatma_süresi():
     sarki = liste.get(anlik_sarki)
     
 
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = sarki_uzanti+sarki+".mp3"
     song_mut = MP3(sarki)
 
     global sarki_uzunlugu
@@ -37,7 +37,7 @@ def oynatma_süresi():
 
     don_uzunlugu = time.strftime('%H:%M:%S', time.gmtime(sarki_uzunlugu))
 
-    anlik_süre = pygame.mixer.music.get_pos() / 1000
+    anlik_süre = slider.get()
     status_bar.config(text=anlik_süre)
     sarki_süresi = time.strftime('%H:%M:%S', time.gmtime(anlik_süre))
     anlik_süre +=1
@@ -55,14 +55,12 @@ def oynatma_süresi():
         slider.config(to= slider_position, value = int(anlik_süre))
     
     else:
-        slider_position = int(sarki_uzunlugu)
-        slider.config(to= slider_position, value = int(slider.get()))
+        slider.config(to= int(sarki_uzunlugu), value = int(slider.get()))
         status_bar.config(text=f'{sarki_süresi} / {don_uzunlugu} ')
         sarki_süresi = time.strftime('%H:%M:%S', time.gmtime(int(slider.get())))
         sonraki_süre = int(slider.get()) + 1
         slider.config(value = sonraki_süre) 
-    #status_bar.config(text=f'{sarki_süresi} / {don_uzunlugu} ')
-    #slider.config(value = int(anlik_süre))
+    
     
     status_bar.after(1000, oynatma_süresi)
     
@@ -72,8 +70,13 @@ def oynatma_süresi():
 
 
 def sarki_ekle():
-    sarki = filedialog.askopenfilename(initialdir='Desktop/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
-    
+    sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
+    global sarki_uzanti
+    sarki_uzanti = sarki
+    x = re.findall("/.+/(.+)\.mp3", sarki)
+    temp = x[0]
+    sarki_uzanti = sarki_uzanti.replace(temp,"")
+    sarki_uzanti = sarki_uzanti.replace(".mp3","")
     sarki = sarki.replace("C:/Users/baris/Desktop/", "")
     sarki = sarki.replace(".mp3", "")
     
@@ -96,20 +99,28 @@ def pause(is_paused):
         pygame.mixer.music.pause()
         paused = True
 
+global y 
+y = 0
 
 
 def play():
+    
     global stopped
     stopped = False
+    global paused
+    pause = False
+    global y 
     sarki = liste.get(ACTIVE)
     sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
-
+    slider.config(value = 0)
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
+    if y == 0:
+        y = y+1
 
-    oynatma_süresi()
-    #slider_position = int(sarki_uzunlugu)
-    #slider.config(to= slider_position, value = 0)
+        oynatma_süresi()
+    else:
+        pass
 
 def sonraki_sarki():
     status_bar.config(text='')
@@ -118,7 +129,7 @@ def sonraki_sarki():
     sonraki= sonraki[0]+1
     sarki = liste.get(sonraki)
     print(sarki)
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = sarki_uzanti+sarki+".mp3"
 
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
@@ -135,7 +146,7 @@ def önceki_sarki():
     önceki=önceki[0]-1
     sarki = liste.get(önceki)
     print(sarki)
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = sarki_uzanti+sarki+".mp3"
 
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
@@ -173,7 +184,7 @@ def stop():
 
 def slide(X):
     
-    #slider_label.config(text=f'{int(slider.get())} / {int(sarki_uzunlugu)}')
+    
     sarki = liste.get(ACTIVE)
     sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
 
