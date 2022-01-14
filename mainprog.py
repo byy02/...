@@ -20,6 +20,10 @@ root.config(bg = "gray")
 
 pygame.mixer.init()
 
+ 
+ 
+global kullan 
+kullan = os.getlogin()
 
 def oynatma_süresi():
     if stopped:
@@ -29,7 +33,7 @@ def oynatma_süresi():
     sarki = liste.get(anlik_sarki)
     
 
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = f'{kullan}/Desktop/{sarki}.mp3'
     song_mut = MP3(sarki)
 
     global sarki_uzunlugu
@@ -74,7 +78,7 @@ def oynatma_süresi():
 def sarki_ekle():
     sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
     
-    sarki = sarki.replace("C:/Users/baris/Desktop/", "")
+    sarki = sarki.replace("{kullan}/Desktop/", "")
     sarki = sarki.replace(".mp3", "")
     
     liste.insert(END, sarki)
@@ -102,7 +106,7 @@ def play():
     global stopped
     stopped = False
     sarki = liste.get(ACTIVE)
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = f'{kullan}/Desktop/{sarki}.mp3'
 
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
@@ -118,7 +122,7 @@ def sonraki_sarki():
     sonraki= sonraki[0]+1
     sarki = liste.get(sonraki)
     print(sarki)
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = f'{kullan}/Desktop/{sarki}.mp3'
 
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
@@ -135,7 +139,7 @@ def önceki_sarki():
     önceki=önceki[0]-1
     sarki = liste.get(önceki)
     print(sarki)
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = f'{kullan}/Desktop/{sarki}.mp3'
 
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0)
@@ -175,7 +179,7 @@ def slide(X):
     
     #slider_label.config(text=f'{int(slider.get())} / {int(sarki_uzunlugu)}')
     sarki = liste.get(ACTIVE)
-    sarki = f'C:/Users/baris/Desktop/{sarki}.mp3'
+    sarki = f'{kullan}/Desktop/{sarki}.mp3'
 
     pygame.mixer.music.load(sarki)
     pygame.mixer.music.play(loops=0, start=int(slider.get()))
