@@ -72,7 +72,7 @@ def oynatma_süresi():
 
 
 def sarki_ekle():
-    sarki = filedialog.askopenfilename(initialdir='audio/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
+    sarki = filedialog.askopenfilename(initialdir='Desktop/', title="Şarkı seç", filetypes=(("mp3 Files", "*.mp3"), ))
     
     sarki = sarki.replace("C:/Users/baris/Desktop/", "")
     sarki = sarki.replace(".mp3", "")
